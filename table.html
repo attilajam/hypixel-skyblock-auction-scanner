@@ -1,0 +1,113 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="refresh" content="10" />
+        <title>Auction Sniper</title>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-family: Arial, sans-serif;
+            }
+            th, td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #f3f3f3;
+                font-weight: bold;
+            }
+            tr:hover {
+                background-color: #f5f5f5;
+            }
+            .copy-btn {
+                padding: 4px 8px;
+                margin-left: 8px;
+                background-color: #f3f3f3;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.9em;
+            }
+            .copy-btn:hover {
+                background-color: #e5e5e5;
+            }
+            .copy-success {
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Auction Data</h1>
+        <input type="text" id="searchInput" placeholder="Search by Item" onkeyup="searchTable()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Rarity</th>
+                    <th>Auction UUID</th>
+                    <th>Price</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {{range .}} 
+                <tr>
+                    <td>{{ .Item }}</td>
+                    <td>{{ .Rarity }}</td>
+                    <td>
+                        {{ .UUID }}
+                        <button class="copy-btn" onclick="copyToClipboard('{{ .UUID }}', this)">Copy</button>
+                    </td>
+                    <td>{{ .Price }}</td>
+                    <td>{{ .Profit }}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+
+        <script>
+            function searchTable() {
+                const input = document.getElementById('searchInput').value.toLowerCase();
+                const table = document.getElementById('tableBody');
+                const rows = table.getElementsByTagName('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const itemCell = rows[i].getElementsByTagName('td')[0];
+                    if (itemCell) {
+                        const item = itemCell.textContent || itemCell.innerText;
+                        if (item.toLowerCase().indexOf(input) > -1) {
+                            rows[i].style.display = '';
+                        } else {
+                            rows[i].style.display = 'none';
+                        }
+                    }
+                }
+            }
+            function copyToClipboard(uuid, button) {
+                const textToCopy = `/viewauction ${uuid}`;
+                
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        button.textContent = 'Copied!';
+                        button.classList.add('copy-success');
+                        
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                            button.classList.remove('copy-success');
+                        }, 1000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy:', err);
+                        button.textContent = 'Failed!';
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                        }, 1000);
+                    });
+            }
+        </script>
+    </body>
+    </html>
