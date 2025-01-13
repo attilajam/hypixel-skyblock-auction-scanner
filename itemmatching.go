@@ -22,7 +22,7 @@ func findId(items []Item, search string) string {
 	}
 	return ""
 }
-func getPrice(name string) int {
+func getPrice(auctions []Auction) []int {
 	resp, err := http.Get("https://api.hypixel.net/v2/resources/skyblock/items")
 	if err != nil {
 		panic(err)
@@ -42,5 +42,9 @@ func getPrice(name string) int {
 	decoder = json.NewDecoder(resp.Body)
 	var prices PriceMap
 	err = decoder.Decode(&prices)
-	return prices[findId(data.Items, name)]
+	var namePrices []int
+	for _, auction := range auctions {
+		namePrices = append(namePrices, prices[findId(data.Items, auction.Item)])
+	}
+	return namePrices
 }
