@@ -56,12 +56,14 @@ func main() {
 		var wg sync.WaitGroup
 
 		wg.Add(len(data.Auctions))
-		for _, auction := range data.Auctions {
+		var prices []int
+		prices = getPrice(data.Auctions)
+		for i, auction := range data.Auctions {
 			go func(auction Auction) {
 				defer wg.Done()
 				if auction.Bin && (auction.Item == itemParam || itemParam == "") {
 					mu.Lock()
-					auction.AveragePrice = getPrice(auction.Item)
+					auction.AveragePrice = prices[i]
 					filteredAuctions = append(filteredAuctions, auction)
 					mu.Unlock()
 				}
