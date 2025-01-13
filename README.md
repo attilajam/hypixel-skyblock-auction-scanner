@@ -5,6 +5,6 @@ Installation:
 ```
 git clone https://github.com/attilajam/hypixel-skyblock-auction-scanner.git
 cd hypixel-skyblock-auction-scanner
-go run main.go
+go run main.go itemmatching.go
 ```
-This will start the web UI on `localhost:8080`
+This will start the web UI on `localhost:8080`. It may take some time to search through all of the data if you go directly to this link, so if you want to search for a specific item, go to `localhost:8080/query=God+Potion` for example.
