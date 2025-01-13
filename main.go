@@ -14,18 +14,18 @@ type Request struct {
 }
 
 type Auction struct {
-	UUID   string `json:"uuid"`
-	Item   string `json:"item_name"`
-	Price  int    `json:"starting_bid"`
-	Profit int
-	Rarity string `json:"tier"`
-	Bin    bool   `json:"bin"`
+	UUID         string `json:"uuid"`
+	Item         string `json:"item_name"`
+	Price        int    `json:"starting_bid"`
+	AveragePrice int
+	Profit       int
+	Rarity       string `json:"tier"`
+	Bin          bool   `json:"bin"`
 }
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		itemParam := ""
-
+		itemParam := r.URL.Query().Get("query")
 		if r.Method == "POST" {
 			// Get the input text from the form
 			itemParam = r.FormValue("item")
@@ -61,6 +61,7 @@ func main() {
 				defer wg.Done()
 				if auction.Bin && (auction.Item == itemParam || itemParam == "") {
 					mu.Lock()
+					auction.AveragePrice = getPrice(auction.Item)
 					filteredAuctions = append(filteredAuctions, auction)
 					mu.Unlock()
 				}
