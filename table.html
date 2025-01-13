@@ -80,25 +80,6 @@
         <script>
             document.getElementById("query").value =
                 new URLSearchParams(window.location.search).get("query") || "";
-            function searchTable() {
-                const input = document
-                    .getElementById("searchInput")
-                    .value.toLowerCase();
-                const table = document.getElementById("tableBody");
-                const rows = table.getElementsByTagName("tr");
-
-                for (let i = 0; i < rows.length; i++) {
-                    const itemCell = rows[i].getElementsByTagName("td")[0];
-                    if (itemCell) {
-                        const item = itemCell.textContent || itemCell.innerText;
-                        if (item.toLowerCase().indexOf(input) > -1) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
-                        }
-                    }
-                }
-            }
             function copyToClipboard(uuid, button) {
                 const textToCopy = `/viewauction ${uuid}`;
 
